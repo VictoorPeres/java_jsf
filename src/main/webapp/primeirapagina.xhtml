@@ -12,16 +12,18 @@
 </h:head>
 
 <h:body>
-    <h:form id="formpessoa">
-    <p:inputText id="campoNome" value="#{pessoaBean.nome}"/><br/><br/>
-    <p:inputText id="campoSobreNome" value="#{pessoaBean.sobrenome}"/><br/><br/>
-    <h:commandButton value="Mostrar Nome" action="#{pessoaBean.addNome}" />
+    <h:form id="formPessoa">
+        <h:outputLabel for="nome" value="Nome" />
+        <h:inputText id="nome" value="#{pessoaBean.pessoa.nome}" /><br/><br/>
+        <h:outputLabel value="Sobrenome" />
+        <h:inputText value="#{pessoaBean.pessoa.sobrenome}" /><br/><br/>
+        <h:outputLabel value="Idade" />
+        <h:inputText value="#{pessoaBean.pessoa.idade}" /><br/><br/>
+        <h:outputLabel value="Nascimento" />
+        <h:inputText  value="#{pessoaBean.pessoa.dataNascimento}">
+        <f:convertDateTime pattern="yyyy-MM-dd" timeZone="America/Manaus"/></h:inputText><br/><br/>
+        <h:commandButton value="Salvar" action="#{pessoaBean.salvar()}"/>
 
-        <h:dataTable value="#{pessoaBean.nomes}" var="nomeCompleto">
-            <h:column>
-                <h:outputLabel value="#{nomeCompleto}"/>
-            </h:column>
-        </h:dataTable>
     </h:form>
 
 </h:body>
