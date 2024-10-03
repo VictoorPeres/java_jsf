@@ -4,19 +4,42 @@ import br.com.avancard.jpautil.JPAUtil;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import java.util.List;
 
 public class DaoGeneric<E> {
     private EntityManager entityManager = JPAUtil.getEntityManager();
     public void salvar(E entidade){
-        try{
             EntityTransaction transaction = entityManager.getTransaction();
             transaction.begin();
             entityManager.persist(entidade);
             transaction.commit();
             System.out.println("Cadastro realizado");
-        }catch(Exception e){
-            e.printStackTrace();
-        }
+    }
+    public E merge(E entidade){
 
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+        E retorno = entityManager.merge(entidade);
+        transaction.commit();
+        System.out.println("Cadastro realizado");
+        return retorno;
+    }
+
+    public void delete(E entidade){
+
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+        entityManager.remove(entidade);
+        transaction.commit();
+        System.out.println("Exclusao realizado");
+    }
+
+    public List<E> getEntityList(Class<E> entidade){
+
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+        List<E> retorno = entityManager.createQuery("from "+entidade.getName()).getResultList();
+        transaction.commit();
+        return retorno;
     }
 }

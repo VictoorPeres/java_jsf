@@ -13,6 +13,8 @@
 
 <h:body>
     <h:form id="formPessoa">
+        <h:outputLabel value="Id" />
+        <h:inputText disabled="true" value="#{pessoaBean.pessoa.id}" /><br/><br/>
         <h:outputLabel for="nome" value="Nome" />
         <h:inputText id="nome" value="#{pessoaBean.pessoa.nome}" /><br/><br/>
         <h:outputLabel value="Sobrenome" />
@@ -22,9 +24,38 @@
         <h:outputLabel value="Nascimento" />
         <h:inputText  value="#{pessoaBean.pessoa.dataNascimento}">
         <f:convertDateTime pattern="yyyy-MM-dd" timeZone="America/Manaus"/></h:inputText><br/><br/>
+
         <h:commandButton value="Salvar" action="#{pessoaBean.salvar()}"/>
+        <h:commandButton value="Novo" action="#{pessoaBean.novo()}"/>
+        <h:commandButton value="Excluir" action="#{pessoaBean.excluir()}"/><br/><br/>
+
+        <h:dataTable value="#{pessoaBean.pessoas}" var="pessoa">
+            <h:column>
+                <h:outputLabel value="#{pessoa.id}"/>
+            </h:column>
+            <h:column>
+                <h:outputLabel value="#{pessoa.nome}"/>
+            </h:column>
+            <h:column>
+                <h:outputLabel value="#{pessoa.sobrenome}"/>
+            </h:column>
+            <h:column>
+                <h:outputLabel value="#{pessoa.idade}"/>
+            </h:column>
+            <h:column>
+                <h:outputLabel value="#{pessoa.dataNascimento}"/>
+            </h:column>
+            <h:column>
+                <h:commandButton value="Editar">
+                    <f:setPropertyActionListener value="#{pessoa}" target="#{pessoaBean.pessoa}"/><!-- O setPropertyAction recebe o objeto PESSOA da linha pelo atributo value e devolve para o objeto do Bean por meio do target -->
+                </h:commandButton>
+            </h:column>
+
+        </h:dataTable>
 
     </h:form>
+
+
 
 </h:body>
 </html>
