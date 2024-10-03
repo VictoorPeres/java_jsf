@@ -13,8 +13,6 @@
 
 <h:body>
     <h:form id="formPessoa">
-        <h:outputLabel value="Id" />
-        <h:inputText disabled="true" value="#{pessoaBean.pessoa.id}" /><br/><br/>
         <h:outputLabel for="nome" value="Nome" />
         <h:inputText id="nome" value="#{pessoaBean.pessoa.nome}" /><br/><br/>
         <h:outputLabel value="Sobrenome" />
@@ -47,6 +45,11 @@
             </h:column>
             <h:column>
                 <h:commandButton value="Editar">
+                    <f:setPropertyActionListener value="#{pessoa}" target="#{pessoaBean.pessoa}"/><!-- O setPropertyAction recebe o objeto PESSOA da linha pelo atributo value e devolve para o objeto do Bean por meio do target -->
+                </h:commandButton>
+            </h:column>
+            <h:column>
+                <h:commandButton value="Excluir" action="#{pessoaBean.excluir()}">
                     <f:setPropertyActionListener value="#{pessoa}" target="#{pessoaBean.pessoa}"/><!-- O setPropertyAction recebe o objeto PESSOA da linha pelo atributo value e devolve para o objeto do Bean por meio do target -->
                 </h:commandButton>
             </h:column>
