@@ -13,42 +13,67 @@
 
 <h:body>
     <h:form id="formPessoa">
+        <h:panelGrid columns="2">
+            <f:facet name="header">
+                <h:graphicImage value="./img/java.png" width="120" height="150"/>
+                <h1><h:outputText value="Cadastro em JSF"/></h1>
+            </f:facet>
         <h:outputLabel for="nome" value="Nome" />
-        <h:inputText id="nome" value="#{pessoaBean.pessoa.nome}" /><br/><br/>
+        <h:inputText id="nome" value="#{pessoaBean.pessoa.nome}" />
         <h:outputLabel value="Sobrenome" />
-        <h:inputText value="#{pessoaBean.pessoa.sobrenome}" /><br/><br/>
+        <h:inputText value="#{pessoaBean.pessoa.sobrenome}" />
         <h:outputLabel value="Idade" />
-        <h:inputText value="#{pessoaBean.pessoa.idade}" /><br/><br/>
+        <h:inputText value="#{pessoaBean.pessoa.idade}" />
         <h:outputLabel value="Nascimento" />
         <h:inputText  value="#{pessoaBean.pessoa.dataNascimento}">
-        <f:convertDateTime pattern="yyyy-MM-dd" timeZone="America/Manaus"/></h:inputText><br/><br/>
-
+        <f:convertDateTime pattern="yyyy-MM-dd" timeZone="America/Manaus"/></h:inputText>
+        <h:outputLabel/>
+        <h:selectOneMenu id="campoSexo" value="#{pessoaBean.pessoa.sexo}">
+            <f:selectItem itemValue="MASCULINO" itemLabel="Masculino"/>
+            <f:selectItem itemValue="FEMININO" itemLabel="Feminino"/>
+        </h:selectOneMenu>
+        <h:panelGroup>
         <h:commandButton value="Salvar" action="#{pessoaBean.salvar()}"/>
         <h:commandButton value="Novo" action="#{pessoaBean.novo()}"/>
-        <h:commandButton value="Excluir" action="#{pessoaBean.excluir()}"/><br/><br/>
-
-        <h:dataTable value="#{pessoaBean.pessoas}" var="pessoa">
+        <h:commandButton value="Excluir" action="#{pessoaBean.excluir()}"/>
+        </h:panelGroup>
+        </h:panelGrid>
+        <h:dataTable value="#{pessoaBean.pessoas}" var="pessoa" border="3" cellpadding="5">
+            <f:facet name="header">
+                <h2><h:outputText value="Lista de pessoas cadastradas"/></h2>
+            </f:facet>
             <h:column>
+                <f:facet name="header">
+                    <h4><h:outputText value="ID"/></h4>
+                </f:facet>
                 <h:outputLabel value="#{pessoa.id}"/>
             </h:column>
             <h:column>
+                <f:facet name="header">
+                    <h4><h:outputText value="NOME"/></h4>
+                </f:facet>
                 <h:outputLabel value="#{pessoa.nome}"/>
             </h:column>
             <h:column>
+                <f:facet name="header">
+                    <h4><h:outputText value="SOBRENOME"/></h4>
+                </f:facet>
                 <h:outputLabel value="#{pessoa.sobrenome}"/>
             </h:column>
             <h:column>
+                <f:facet name="header">
+                    <h4><h:outputText value="IDADE"/></h4>
+                </f:facet>
                 <h:outputLabel value="#{pessoa.idade}"/>
             </h:column>
             <h:column>
-                <h:outputLabel value="#{pessoa.dataNascimento}"/>
-            </h:column>
-            <h:column>
+                <f:facet name="header">
+                    <h3><h:outputText value="AÇÃO"/></h3>
+                </f:facet>
                 <h:commandButton value="Editar">
                     <f:setPropertyActionListener value="#{pessoa}" target="#{pessoaBean.pessoa}"/><!-- O setPropertyAction recebe o objeto PESSOA da linha pelo atributo value e devolve para o objeto do Bean por meio do target -->
                 </h:commandButton>
-            </h:column>
-            <h:column>
+                <h:outputLabel value="  "/>
                 <h:commandButton value="Excluir" action="#{pessoaBean.excluir()}">
                     <f:setPropertyActionListener value="#{pessoa}" target="#{pessoaBean.pessoa}"/><!-- O setPropertyAction recebe o objeto PESSOA da linha pelo atributo value e devolve para o objeto do Bean por meio do target -->
                 </h:commandButton>
