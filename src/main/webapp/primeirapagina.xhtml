@@ -8,7 +8,7 @@
       xmlns:p="http://primefaces.org/ui">
 
 <h:head>
-    <title> Avancard </title>
+    <title> Cadastro de Usuário </title>
 </h:head>
 
 <h:body>
@@ -16,7 +16,7 @@
         <h:panelGrid columns="2">
             <f:facet name="header">
                 <h:graphicImage value="./img/java.png" width="120" height="150"/>
-                <h1><h:outputText value="Cadastro em JSF"/></h1>
+                <h1><h:outputText value="Cadastro de Usuário"/></h1>
             </f:facet>
         <h:outputLabel for="nome" value="Nome" />
         <h:inputText id="nome" value="#{pessoaBean.pessoa.nome}" />
@@ -27,20 +27,48 @@
         <h:outputLabel value="Nascimento" />
         <h:inputText  value="#{pessoaBean.pessoa.dataNascimento}">
         <f:convertDateTime pattern="yyyy-MM-dd" timeZone="America/Manaus"/></h:inputText>
-        <h:outputLabel/>
+        <h:outputLabel value="Login" />
+        <h:inputText value="#{pessoaBean.pessoa.login}" />
+        <h:outputLabel value="Senha" />
+        <h:inputSecret value="#{pessoaBean.pessoa.senha}" />
+
+            <h:outputLabel value="Perfil"/>
+            <h:selectOneMenu id="campoPerfil" value="#{pessoaBean.pessoa.perfilUsuario}">
+                <f:selectItem itemLabel="Selecione" noSelectionOption="true"/>
+                <f:selectItem itemValue="Convidado"/>
+                <f:selectItem itemValue="Administrador"/>
+            </h:selectOneMenu>
+
+            <h:outputLabel value="Sexo"/>
         <h:selectOneMenu id="campoSexo" value="#{pessoaBean.pessoa.sexo}">
+            <f:selectItem itemLabel="Selecione" noSelectionOption="true"/>
             <f:selectItem itemValue="MASCULINO" itemLabel="Masculino"/>
             <f:selectItem itemValue="FEMININO" itemLabel="Feminino"/>
         </h:selectOneMenu>
-        <h:panelGroup>
-        <h:commandButton value="Salvar" action="#{pessoaBean.salvar()}"/>
-        <h:commandButton value="Novo" action="#{pessoaBean.novo()}"/>
-        <h:commandButton value="Excluir" action="#{pessoaBean.excluir()}"/>
-        </h:panelGroup>
+
+            <h:outputLabel value="Frameworks"/>
+            <h:selectManyMenu id="campoFrameworks" style="height: 150px;" value="#{pessoaBean.pessoa.frameworks}">
+                <f:selectItem itemValue="Hibernate" />
+                <f:selectItem itemValue="Spring MVC" />
+                <f:selectItem itemValue="JPA" />
+                <f:selectItem itemValue="Prime Faces" />
+                <f:selectItem itemValue="JFS" />
+            </h:selectManyMenu>
+
+            <h:outputLabel value="Ativo"/>
+            <h:selectBooleanCheckbox value="#{pessoaBean.pessoa.ativo}"/>
+
         </h:panelGrid>
+        <h:panelGroup>
+        <h:commandButton value="Salvar" action="#{pessoaBean.salvar()}" image="img/salvar.png" style="width: 30px; height: 30px;"/>
+        <h:commandButton value="Novo" action="#{pessoaBean.novo()}" image="img/new.png" style="width: 30px; height: 30px;"/>
+        <h:commandButton value="Excluir" action="#{pessoaBean.excluir()}" />
+            <h:commandButton value="Limpar" type="reset"/>
+        </h:panelGroup>
+
         <h:dataTable value="#{pessoaBean.pessoas}" var="pessoa" border="3" cellpadding="5">
             <f:facet name="header">
-                <h2><h:outputText value="Lista de pessoas cadastradas"/></h2>
+                <h2><h:outputText value="Lista de usuários cadastrados"/></h2>
             </f:facet>
             <h:column>
                 <f:facet name="header">
@@ -70,11 +98,11 @@
                 <f:facet name="header">
                     <h3><h:outputText value="AÇÃO"/></h3>
                 </f:facet>
-                <h:commandButton value="Editar">
+                <h:commandButton value="Editar" image="img/edicao.png" style="width: 30px; height: 30px;">
                     <f:setPropertyActionListener value="#{pessoa}" target="#{pessoaBean.pessoa}"/><!-- O setPropertyAction recebe o objeto PESSOA da linha pelo atributo value e devolve para o objeto do Bean por meio do target -->
                 </h:commandButton>
                 <h:outputLabel value="  "/>
-                <h:commandButton value="Excluir" action="#{pessoaBean.excluir()}">
+                <h:commandButton value="Excluir" action="#{pessoaBean.excluir()}" image="img/excluir.png" style="width: 30px; height: 30px;">
                     <f:setPropertyActionListener value="#{pessoa}" target="#{pessoaBean.pessoa}"/><!-- O setPropertyAction recebe o objeto PESSOA da linha pelo atributo value e devolve para o objeto do Bean por meio do target -->
                 </h:commandButton>
             </h:column>
@@ -82,8 +110,5 @@
         </h:dataTable>
 
     </h:form>
-
-
-
 </h:body>
 </html>

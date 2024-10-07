@@ -2,9 +2,13 @@ package br.com.avancard.bean;
 
 import br.com.avancard.model.dao.DaoGeneric;
 import br.com.avancard.model.entity.Pessoa;
+import br.com.avancard.repository.IDaoPessoa;
+import br.com.avancard.repository.IDaoPessoaImpl;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.*;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +20,24 @@ public class PessoaBean {
     DaoGeneric<Pessoa> dao = new DaoGeneric<Pessoa>();
     private List<Pessoa> pessoas = new ArrayList<Pessoa>();
 
+    IDaoPessoa iDaoPessoa = new IDaoPessoaImpl();
+
+
+    public String login(){
+
+        Pessoa pessoaUser = iDaoPessoa.consultarPessoa(pessoa.getLogin(), pessoa.getSenha());
+
+        if(pessoaUser != null){/*Achou o usuário*/
+
+            /**/
+            FacesContext context = FacesContext.getCurrentInstance();
+            ExternalContext externalContext = context.getExternalContext();
+            externalContext.getSessionMap().put("usuarioLogado", pessoaUser.getLogin());
+
+            return "primeirapagina.jsf";
+        }
+        return "index.jsf";
+    }
 
     public String salvar(){
         pessoa = dao.merge(pessoa);

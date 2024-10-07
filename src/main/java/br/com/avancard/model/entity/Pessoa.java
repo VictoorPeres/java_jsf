@@ -22,6 +22,11 @@ public class Pessoa implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date dataNascimento;
     private String sexo;
+    private String[] frameworks;
+    private Boolean ativo;
+    private String login;
+    private String senha;
+    private String perfilUsuario;
 
     public Pessoa() {
 
@@ -73,6 +78,46 @@ public class Pessoa implements Serializable {
 
     public void setSexo(String sexo) {
         this.sexo = sexo;
+    }
+
+    public String[] getFrameworks() {
+        return frameworks;
+    }
+
+    public void setFrameworks(String[] frameworks) {
+        this.frameworks = frameworks;
+    }
+
+    public Boolean getAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(Boolean ativo) {
+        this.ativo = ativo;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+
+    public String getPerfilUsuario() {
+        return perfilUsuario;
+    }
+
+    public void setPerfilUsuario(String perfilUsuario) {
+        this.perfilUsuario = perfilUsuario;
     }
 
     @Override
