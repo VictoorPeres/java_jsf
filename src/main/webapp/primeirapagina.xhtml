@@ -12,7 +12,14 @@
 </h:head>
 
 <h:body>
-    <h:form id="formPessoa">
+
+    <h:form>
+        <h:commandLink style="margin-left: 1cm" value="Administração" action="primeirapagina"/>
+        <h:commandLink style="margin-left: 1cm" value="Lançamentos" action="lancamento"/>
+        <h:commandLink style="margin-left: 1cm" value="Trocar Usuário" action="index"/>
+    </h:form>
+
+    <h:form id="formPessoa" rendered="#{pessoaBean.permiteAcesso('Administrador')}">
         <h:panelGrid columns="2">
             <f:facet name="header">
                 <h:graphicImage value="./img/java.png" width="120" height="150"/>
@@ -58,14 +65,13 @@
             <h:outputLabel value="Ativo"/>
             <h:selectBooleanCheckbox value="#{pessoaBean.pessoa.ativo}"/>
 
-        </h:panelGrid>
+        <h:outputLabel/>
         <h:panelGroup>
-        <h:commandButton value="Salvar" action="#{pessoaBean.salvar()}" image="img/salvar.png" style="width: 30px; height: 30px;"/>
-        <h:commandButton value="Novo" action="#{pessoaBean.novo()}" image="img/new.png" style="width: 30px; height: 30px;"/>
-        <h:commandButton value="Excluir" action="#{pessoaBean.excluir()}" />
-            <h:commandButton value="Limpar" type="reset"/>
+        <h:commandButton value="Salvar" action="#{pessoaBean.salvar()}" image="img/salvar-dados.png" style="width: 30px; height: 30px; margin-left: 1cm;"/>
+        <h:commandButton value="Novo" action="#{pessoaBean.novo()}" image="img/novo-usuario.png" style="width: 30px; height: 30px; margin-left: 1cm;" />
+            <h:commandButton value="Limpar" type="reset" image="img/limpar.png" style="width: 30px; height: 30px; margin-left: 1cm;"/>
         </h:panelGroup>
-
+        </h:panelGrid>
         <h:dataTable value="#{pessoaBean.pessoas}" var="pessoa" border="3" cellpadding="5">
             <f:facet name="header">
                 <h2><h:outputText value="Lista de usuários cadastrados"/></h2>

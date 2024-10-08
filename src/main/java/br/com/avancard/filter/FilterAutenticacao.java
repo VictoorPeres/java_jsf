@@ -14,11 +14,11 @@ public class FilterAutenticacao implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
-        HttpServletRequest req = (HttpServletRequest) request;
-        HttpSession session = req.getSession();
+        HttpServletRequest req = (HttpServletRequest) request; /* Aqui, a requisição é convertida para HttpServletRequest, que fornece métodos adicionais específicos para aplicações web, como obter informações sobre a sessão e parâmetros. */
+        HttpSession session = req.getSession(); /* O método getSession() obtém a sessão do usuário atual. Se não existir uma sessão, uma nova será criada. Isso permite armazenar informações sobre o estado do usuário durante a navegação. */
 
-        String usuarioLogado = (String) session.getAttribute("usuarioLogado");
-        String url = req.getServletPath();
+        Pessoa usuarioLogado = (Pessoa) session.getAttribute("usuarioLogado"); /* Esta linha busca o atributo usuarioLogado na sessão. Este atributo deve conter as informações do usuário autenticado (se o usuário estiver logado) ou null se não estiver logado. A conversão para String sugere que o nome de usuário está sendo armazenado como uma String. */
+        String url = req.getServletPath(); /* O método getServletPath() obtém o caminho do servlet que foi chamado. Isso é útil para saber qual página ou recurso está sendo acessado pelo usuário. */
         if (!url.equalsIgnoreCase("index.jsf") && usuarioLogado == null) {
             RequestDispatcher dispatcher = req.getRequestDispatcher("/index.jsf");
             dispatcher.forward(request, response);

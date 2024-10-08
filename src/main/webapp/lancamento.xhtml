@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title> Lançamentos </title>
+</h:head>
+
+<h:body>
+
+    <h:form>
+        <h:commandLink style="margin-left: 1cm" value="Administração" action="primeirapagina"/>
+        <h:commandLink style="margin-left: 1cm" value="Lançamentos" action="lancamento"/>
+        <h:commandLink style="margin-left: 1cm" value="Trocar Usuário" action="index"/>
+    </h:form>
+
+    <h:form id="formLancamento" style="margin-top: 10%; margin-left: 42%">
+            <h:panelGrid columns="2">
+                <f:facet name="header">
+                    <h1><h:outputText value="Lançamentos"/></h1>
+                </f:facet>
+                <h:outputLabel value="Nota Fiscal" />
+                <h:inputText value="#{lancamentoBean.lancamento.numeroNotaFiscal}"/>
+                <h:outputLabel value="Empresa Origem" />
+                <h:inputText value="#{lancamentoBean.lancamento.empresaOrigem}"/>
+                <h:outputLabel value="Empresa Destino" />
+                <h:inputText value="#{lancamentoBean.lancamento.empresaDestino}"/>
+            <h:outputLabel value=""/>
+            <h:panelGroup>
+                <h:commandButton value="Salvar" action="#{lancamentoBean.salvar()}" image="img/salvar-dados.png" style="width: 30px; height: 30px;margin-left: 1cm;"/>
+                <h:commandButton value="Novo" action="#{lancamentoBean.novo()}" image="img/novo-documento.png" style="width: 30px; height: 30px;margin-left: 1cm;"/>
+                <h:commandButton value="Limpar" type="reset" image="img/limpar.png" style="width: 30px; height: 30px;margin-left: 1cm;"/>
+            </h:panelGroup>
+            </h:panelGrid>
+            <h:dataTable value="#{lancamentoBean.lancamentos}" var="lancamento" border="3" cellpadding="5">
+                <f:facet name="header">
+                    <h2><h:outputText value="Lista de lançamentos"/></h2>
+                </f:facet>
+                <h:column>
+                    <f:facet name="header">
+                        <h4><h:outputText value="ID"/></h4>
+                    </f:facet>
+                    <h:outputLabel value="#{lancamento.id}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">
+                        <h4><h:outputText value="NOTA FISCAL"/></h4>
+                    </f:facet>
+                    <h:outputLabel value="#{lancamento.numeroNotaFiscal}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">
+                        <h4><h:outputText value="ORIGEM"/></h4>
+                    </f:facet>
+                    <h:outputLabel value="#{lancamento.empresaOrigem}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">
+                        <h4><h:outputText value="DESTINO"/></h4>
+                    </f:facet>
+                    <h:outputLabel value="#{lancamento.empresaDestino}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">
+                        <h3><h:outputText value="AÇÃO"/></h3>
+                    </f:facet>
+                    <h:commandButton value="Editar" image="img/edicao.png" style="width: 30px; height: 30px;">
+                        <f:setPropertyActionListener value="#{lancamento}" target="#{lancamentoBean.lancamento}"/><!-- O setPropertyAction recebe o objeto LANCAMENTO da linha pelo atributo value e devolve para o objeto do Bean por meio do target -->
+                    </h:commandButton>
+                    <h:outputLabel value="  "/>
+                    <h:commandButton value="Excluir" action="#{lancamentoBean.excluir()}" image="img/excluir.png" style="width: 30px; height: 30px;">
+                        <f:setPropertyActionListener value="#{lancamento}" target="#{lancamentoBean.lancamento}"/><!-- O setPropertyAction recebe o objeto LANCAMENTO da linha pelo atributo value e devolve para o objeto do Bean por meio do target -->
+                    </h:commandButton>
+                </h:column>
+
+            </h:dataTable>
+
+    </h:form>
+</h:body>
+</html>

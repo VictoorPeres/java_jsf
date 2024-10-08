@@ -25,4 +25,8 @@
         <extension>jsp</extension>
         <mime-type>application/jsp</mime-type>
     </mime-mapping>
+    <error-page>
+        <exception-type>javax.faces.application.ViewExpiredException</exception-type>
+        <location>/login.jsf</location>
+    </error-page>
 </web-app>
