@@ -13,27 +13,26 @@
 
 <h:body>
 
-    <h:form>
-        <h:commandLink style="margin-left: 1cm" value="Administração" action="primeirapagina"/>
-        <h:commandLink style="margin-left: 1cm" value="Lançamentos" action="lancamento"/>
-        <h:commandLink style="margin-left: 1cm" value="Trocar Usuário" action="index"/>
-    </h:form>
+<ui:include src="menu.xhtml"/>
 
     <h:form id="formPessoa" rendered="#{pessoaBean.permiteAcesso('Administrador')}">
+        <h:messages infoStyle="color: black; background-color: seagreen; width: 170px; padding: 4px"/>
         <h:panelGrid columns="2">
             <f:facet name="header">
                 <h:graphicImage value="./img/java.png" width="120" height="150"/>
                 <h1><h:outputText value="Cadastro de Usuário"/></h1>
             </f:facet>
         <h:outputLabel for="nome" value="Nome" />
-        <h:inputText id="nome" value="#{pessoaBean.pessoa.nome}" />
+            <h:inputText id="nome" value="#{pessoaBean.pessoa.nome}" required="true" requiredMessage="Informe o nome do usuário" validatorMessage="O nome deve conter no mínimo 3 letras">
+                <f:validateLength minimum="3" maximum="15"/>
+            </h:inputText>
         <h:outputLabel value="Sobrenome" />
-        <h:inputText value="#{pessoaBean.pessoa.sobrenome}" />
+        <h:inputText value="#{pessoaBean.pessoa.sobrenome}"/>
         <h:outputLabel value="Idade" />
-        <h:inputText value="#{pessoaBean.pessoa.idade}" />
+        <h:inputText value="#{pessoaBean.pessoa.idade}"/>
         <h:outputLabel value="Nascimento" />
         <h:inputText  value="#{pessoaBean.pessoa.dataNascimento}">
-        <f:convertDateTime pattern="yyyy-MM-dd" timeZone="America/Manaus"/></h:inputText>
+        <f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus"/></h:inputText>
         <h:outputLabel value="Login" />
         <h:inputText value="#{pessoaBean.pessoa.login}" />
         <h:outputLabel value="Senha" />
@@ -64,6 +63,23 @@
 
             <h:outputLabel value="Ativo"/>
             <h:selectBooleanCheckbox value="#{pessoaBean.pessoa.ativo}"/>
+
+            <h:outputLabel value="Programador: "/>
+            <h:selectOneRadio value="#{pessoaBean.pessoa.nivelProgramador}" layout="pageDirection">
+                <f:selectItem itemValue="J" itemLabel="Junior"/>
+                <f:selectItem itemValue="P" itemLabel="Pleno"/>
+                <f:selectItem itemValue="S" itemLabel="Senior"/>
+                <f:selectItem itemValue="E" itemLabel="Especialista"/>
+            </h:selectOneRadio>
+
+            <h:outputLabel value="Linguagens"/>
+            <h:selectManyCheckbox value="#{pessoaBean.pessoa.linguagens}">
+            <f:selectItem itemValue="Java" itemLabel="Java"/>
+            <f:selectItem itemValue="PHP" itemLabel="PHP"/>
+            <f:selectItem itemValue="Pyton" itemLabel="Pyton"/>
+            <f:selectItem itemValue="C#" itemLabel="C#"/>
+            <f:selectItem itemValue="Cobol" itemLabel="Cobol"/>
+            </h:selectManyCheckbox>
 
         <h:outputLabel/>
         <h:panelGroup>
@@ -99,6 +115,14 @@
                     <h4><h:outputText value="IDADE"/></h4>
                 </f:facet>
                 <h:outputLabel value="#{pessoa.idade}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">
+                    <h4><h:outputText value="NASCIMENTO"/></h4>
+                </f:facet>
+                <h:outputLabel converter="javax.faces.DateTime" value="#{pessoa.dataNascimento}">
+                    <f:convertDateTime pattern="dd/MM/yyyy" />
+                </h:outputLabel>
             </h:column>
             <h:column>
                 <f:facet name="header">

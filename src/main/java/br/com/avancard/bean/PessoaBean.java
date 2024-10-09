@@ -6,6 +6,7 @@ import br.com.avancard.repository.IDaoPessoa;
 import br.com.avancard.repository.IDaoPessoaImpl;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.*;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
@@ -49,7 +50,14 @@ public class PessoaBean {
     public String salvar(){
         pessoa = dao.merge(pessoa);
         carregarPessoas();
+        mostrarMsg("Cadastrado com sucesso!");
         return "";
+    }
+
+    private void mostrarMsg(String msg) {
+        FacesContext context = FacesContext.getCurrentInstance();
+        FacesMessage message = new FacesMessage(msg);
+        context.addMessage(null, message);
     }
 
     public void novo(){
@@ -60,6 +68,8 @@ public class PessoaBean {
         dao.delete(pessoa);
         pessoa = new Pessoa();
         carregarPessoas();
+        mostrarMsg("Removido com sucesso!");
+
     }
     @PostConstruct
     public void carregarPessoas(){

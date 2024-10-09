@@ -3,6 +3,8 @@ package br.com.avancard.bean;
 import br.com.avancard.model.dao.DaoGeneric;
 import br.com.avancard.model.entity.Lancamento;
 import br.com.avancard.model.entity.Pessoa;
+import br.com.avancard.repository.IDaoLancamento;
+import br.com.avancard.repository.IDaoLancamentoImpl;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -18,12 +20,14 @@ public class LancamentoBean {
     private Lancamento lancamento = new Lancamento();
     private DaoGeneric<Lancamento> dao = new DaoGeneric<Lancamento>();
     private List<Lancamento> lancamentos = new ArrayList<Lancamento>();
+    private IDaoLancamento daoLancamento = new IDaoLancamentoImpl();
 
-    FacesContext context = FacesContext.getCurrentInstance();
-    ExternalContext externalContext = context.getExternalContext();
-    Pessoa pessoa = (Pessoa) externalContext.getSessionMap().get("usuarioLogado");
+
 
     public String salvar(){
+        FacesContext context = FacesContext.getCurrentInstance();
+        ExternalContext externalContext = context.getExternalContext();
+        Pessoa pessoa = (Pessoa) externalContext.getSessionMap().get("usuarioLogado");
         lancamento.setUsuario(pessoa);
         lancamento = dao.merge(lancamento);
         carregarLancamentos();
@@ -32,7 +36,10 @@ public class LancamentoBean {
 
     @PostConstruct
     public void carregarLancamentos(){
-        lancamentos = dao.getLancamentosId(Lancamento.class, pessoa.getId());
+        FacesContext context = FacesContext.getCurrentInstance();
+        ExternalContext externalContext = context.getExternalContext();
+        Pessoa pessoa = (Pessoa) externalContext.getSessionMap().get("usuarioLogado");
+        lancamentos = daoLancamento.consultarLancamentoUsuario(pessoa.getId());
     }
 
     public void novo(){

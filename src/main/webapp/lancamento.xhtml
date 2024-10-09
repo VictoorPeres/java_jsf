@@ -13,11 +13,7 @@
 
 <h:body>
 
-    <h:form>
-        <h:commandLink style="margin-left: 1cm" value="Administração" action="primeirapagina"/>
-        <h:commandLink style="margin-left: 1cm" value="Lançamentos" action="lancamento"/>
-        <h:commandLink style="margin-left: 1cm" value="Trocar Usuário" action="index"/>
-    </h:form>
+    <ui:include src="menu.xhtml"/>
 
     <h:form id="formLancamento" style="margin-top: 10%; margin-left: 42%">
             <h:panelGrid columns="2">

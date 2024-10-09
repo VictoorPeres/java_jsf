@@ -27,6 +27,8 @@ public class Pessoa implements Serializable {
     private String login;
     private String senha;
     private String perfilUsuario;
+    private String nivelProgramador;
+    private String[] linguagens;
 
     public Pessoa() {
 
@@ -118,6 +120,22 @@ public class Pessoa implements Serializable {
 
     public void setPerfilUsuario(String perfilUsuario) {
         this.perfilUsuario = perfilUsuario;
+    }
+
+    public String getNivelProgramador() {
+        return nivelProgramador;
+    }
+
+    public void setNivelProgramador(String nivelProgramador) {
+        this.nivelProgramador = nivelProgramador;
+    }
+
+    public String[] getLinguagens() {
+        return linguagens;
+    }
+
+    public void setLinguagens(String[] linguagens) {
+        this.linguagens = linguagens;
     }
 
     @Override

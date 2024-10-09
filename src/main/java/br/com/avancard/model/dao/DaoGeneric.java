@@ -43,12 +43,4 @@ public class DaoGeneric<E> {
         return retorno;
     }
 
-    public List<E> getLancamentosId(Class<E> entidade, Long id){
-
-        EntityTransaction transaction = entityManager.getTransaction();
-        transaction.begin();
-        List<E> retorno = entityManager.createQuery("from "+entidade.getName()+" where usuario_fk = " + id).getResultList();
-        transaction.commit();
-        return retorno;
-    }
 }
