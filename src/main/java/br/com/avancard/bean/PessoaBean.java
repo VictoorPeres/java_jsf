@@ -12,6 +12,7 @@ import javax.faces.bean.*;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -30,6 +31,17 @@ public class PessoaBean {
 
     IDaoPessoa iDaoPessoa = new IDaoPessoaImpl();
 
+
+    public String logout(){
+        FacesContext context = FacesContext.getCurrentInstance();
+        ExternalContext externalContext = context.getExternalContext();
+        externalContext.getSessionMap().remove("usuarioLogado");
+
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        request.getSession().invalidate();
+        return "index.jsf";
+    }
+
     public String login(){
 
         Pessoa pessoaUser = iDaoPessoa.consultarPessoa(pessoa.getLogin(), pessoa.getSenha());
@@ -45,6 +57,8 @@ public class PessoaBean {
         }
         return "index.jsf";
     }
+
+
 
     public boolean permiteAcesso(String acesso){
         FacesContext context = FacesContext.getCurrentInstance();
