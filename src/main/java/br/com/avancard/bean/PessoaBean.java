@@ -1,7 +1,6 @@
 package br.com.avancard.bean;
 
 import br.com.avancard.model.dao.DaoGeneric;
-import br.com.avancard.model.entity.Endereco;
 import br.com.avancard.model.entity.Pessoa;
 import br.com.avancard.repository.IDaoPessoa;
 import br.com.avancard.repository.IDaoPessoaImpl;
@@ -130,7 +129,7 @@ public class PessoaBean {
                 json.append(cep);
             }
 
-           Endereco gson = new Gson().fromJson(json.toString(), Endereco.class);
+           Pessoa gson = new Gson().fromJson(json.toString(), Pessoa.class);
 
             pessoa.setLogradouro(gson.getLogradouro());
             pessoa.setBairro(gson.getBairro());
