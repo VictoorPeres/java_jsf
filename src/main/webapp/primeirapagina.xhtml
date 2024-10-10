@@ -27,12 +27,15 @@
                 <f:validateLength minimum="3" maximum="15"/>
             </h:inputText>
         <h:outputLabel value="Sobrenome" />
-        <h:inputText value="#{pessoaBean.pessoa.sobrenome}"/>
+        <h:inputText value="#{pessoaBean.pessoa.sobrenome}" required="true" requiredMessage="Informe o sobrenome do usuário" validatorMessage="O sobrenome deve conter no mínimo 5 letras">
+            <f:validateLength minimum="5" maximum="50"/>
+        </h:inputText>
         <h:outputLabel value="Idade" />
         <h:inputText value="#{pessoaBean.pessoa.idade}"/>
         <h:outputLabel value="Nascimento" />
-        <h:inputText  value="#{pessoaBean.pessoa.dataNascimento}">
-        <f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus"/></h:inputText>
+        <h:inputText  value="#{pessoaBean.pessoa.dataNascimento}" converterMessage="O formato da data está incorreto">
+        <f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus"/>
+        </h:inputText>
         <h:outputLabel value="Login" />
         <h:inputText value="#{pessoaBean.pessoa.login}" />
         <h:outputLabel value="Senha" />
@@ -84,10 +87,16 @@
         <h:outputLabel/>
         <h:panelGroup>
         <h:commandButton value="Salvar" action="#{pessoaBean.salvar()}" image="img/salvar-dados.png" style="width: 30px; height: 30px; margin-left: 1cm;"/>
-        <h:commandButton value="Novo" action="#{pessoaBean.novo()}" image="img/novo-usuario.png" style="width: 30px; height: 30px; margin-left: 1cm;" />
-            <h:commandButton value="Limpar" type="reset" image="img/limpar.png" style="width: 30px; height: 30px; margin-left: 1cm;"/>
+        <h:commandButton value="Novo" action="#{pessoaBean.novo()}" id="botaoNovo" image="img/novo-usuario.png" style="width: 30px; height: 30px; margin-left: 1cm;" immediate="true">
+        <f:ajax execute="botaoNovo" render="@form"/>
+        </h:commandButton>
+        <h:commandButton value="Limpar" action="#{pessoaBean.limpar()}" id="botaoLimpar" image="img/limpar.png" style="width: 30px; height: 30px; margin-left: 1cm;" immediate="true">
+            <f:ajax execute="botaoLimpar" render="@form"/>
+        </h:commandButton>
         </h:panelGroup>
         </h:panelGrid>
+    </h:form>
+    <h:form>
         <h:dataTable value="#{pessoaBean.pessoas}" var="pessoa" border="3" cellpadding="5">
             <f:facet name="header">
                 <h2><h:outputText value="Lista de usuários cadastrados"/></h2>
@@ -128,17 +137,17 @@
                 <f:facet name="header">
                     <h3><h:outputText value="AÇÃO"/></h3>
                 </f:facet>
-                <h:commandButton value="Editar" image="img/edicao.png" style="width: 30px; height: 30px;">
-                    <f:setPropertyActionListener value="#{pessoa}" target="#{pessoaBean.pessoa}"/><!-- O setPropertyAction recebe o objeto PESSOA da linha pelo atributo value e devolve para o objeto do Bean por meio do target -->
+                <h:commandButton value="Editar" image="img/edicao.png" style="width: 30px; height: 30px;" immediate="true">
+                    <f:setPropertyActionListener value="#{pessoa}" target="#{pessoaBean.pessoa}" /><!-- O setPropertyAction recebe o objeto PESSOA da linha pelo atributo value e devolve para o objeto do Bean por meio do target -->
                 </h:commandButton>
                 <h:outputLabel value="  "/>
-                <h:commandButton value="Excluir" action="#{pessoaBean.excluir()}" image="img/excluir.png" style="width: 30px; height: 30px;">
-                    <f:setPropertyActionListener value="#{pessoa}" target="#{pessoaBean.pessoa}"/><!-- O setPropertyAction recebe o objeto PESSOA da linha pelo atributo value e devolve para o objeto do Bean por meio do target -->
+                <h:commandButton value="Excluir" action="#{pessoaBean.excluir()}" image="img/excluir.png" style="width: 30px; height: 30px;" immediate="true" >
+                    <f:setPropertyActionListener value="#{pessoa}" target="#{pessoaBean.pessoa}" /><!-- O setPropertyAction recebe o objeto PESSOA da linha pelo atributo value e devolve para o objeto do Bean por meio do target -->
                 </h:commandButton>
             </h:column>
 
         </h:dataTable>
+</h:form>
 
-    </h:form>
 </h:body>
 </html>

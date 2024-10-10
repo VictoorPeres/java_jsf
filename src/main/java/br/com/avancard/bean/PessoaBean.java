@@ -60,8 +60,16 @@ public class PessoaBean {
         context.addMessage(null, message);
     }
 
-    public void novo(){
+    public String novo(){
+
         pessoa = new Pessoa();
+        return "";
+    }
+
+    public String limpar(){
+
+        pessoa = new Pessoa();
+        return "";
     }
 
     public void excluir(){
