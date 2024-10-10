@@ -5,7 +5,6 @@
              version="3.0">
   <persistence-unit name="jpa_jsf">
 
-    <class>br.com.avancard.model.entity.Pessoa</class>
     <properties>
       <property name="hibernate.connection.driver_class" value="com.microsoft.sqlserver.jdbc.SQLServerDriver" />
       <property name="hibernate.connection.url" value="jdbc:sqlserver://localhost:1433;databaseName=java_jsf;encrypt=true;trustServerCertificate=true" />

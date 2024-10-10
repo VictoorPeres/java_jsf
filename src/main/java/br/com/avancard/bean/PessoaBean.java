@@ -1,15 +1,23 @@
 package br.com.avancard.bean;
 
 import br.com.avancard.model.dao.DaoGeneric;
+import br.com.avancard.model.entity.Endereco;
 import br.com.avancard.model.entity.Pessoa;
 import br.com.avancard.repository.IDaoPessoa;
 import br.com.avancard.repository.IDaoPessoaImpl;
+import com.google.gson.Gson;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.*;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +30,6 @@ public class PessoaBean {
     private List<Pessoa> pessoas = new ArrayList<Pessoa>();
 
     IDaoPessoa iDaoPessoa = new IDaoPessoaImpl();
-
 
     public String login(){
 
@@ -106,5 +113,34 @@ public class PessoaBean {
 
     public void setPessoas(List<Pessoa> pessoas) {
         this.pessoas = pessoas;
+    }
+
+    /* Metodo para acessar uma api de CEP e retornar para a tela do sistema */
+    public void pesquisaCep(AjaxBehaviorEvent event){
+        try {
+            URL url = new URL( "https://viacep.com.br/ws/"+pessoa.getCep()+"/json/");
+            URLConnection connection = url.openConnection();
+            InputStream inputStream = connection.getInputStream();
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+
+            String cep = "";
+            StringBuilder json = new StringBuilder();
+
+            while ((cep = bufferedReader.readLine()) != null) {
+                json.append(cep);
+            }
+
+           Endereco gson = new Gson().fromJson(json.toString(), Endereco.class);
+
+            pessoa.setLogradouro(gson.getLogradouro());
+            pessoa.setBairro(gson.getBairro());
+            pessoa.setLocalidade(gson.getLocalidade());
+            pessoa.setUf(gson.getUf());
+            pessoa.setComplemento(gson.getComplemento());
+
+        }catch (Exception e) {
+            e.printStackTrace();
+            mostrarMsg("Erro ao cosultar o cep: " + e.getMessage());
+        }
     }
 }

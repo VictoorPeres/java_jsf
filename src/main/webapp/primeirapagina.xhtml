@@ -67,6 +67,31 @@
             <h:outputLabel value="Ativo"/>
             <h:selectBooleanCheckbox value="#{pessoaBean.pessoa.ativo}"/>
 
+            <h:outputLabel value="CEP"/>
+            <h:inputText value="#{pessoaBean.pessoa.cep}">
+                <f:ajax event="blur" execute="@this"
+                        listener="#{pessoaBean.pesquisaCep(pageContext)}"
+                        render="logradouro complemento bairro cidade uf"/>
+            </h:inputText>
+
+            <h:outputLabel value="Logradouro"/>
+            <h:inputText value="#{pessoaBean.pessoa.logradouro}" id="logradouro"/>
+
+            <h:outputLabel value="Complemento"/>
+            <h:inputText value="#{pessoaBean.pessoa.complemento}" id="complemento"/>
+
+            <h:outputLabel value="Numero"/>
+            <h:inputText value="#{pessoaBean.pessoa.numero}" id="numero"/>
+
+            <h:outputLabel value="Bairro"/>
+            <h:inputText value="#{pessoaBean.pessoa.bairro}" id="bairro"/>
+
+            <h:outputLabel value="Cidade"/>
+            <h:inputText value="#{pessoaBean.pessoa.localidade}" id="cidade"/>
+
+            <h:outputLabel value="UF"/>
+            <h:inputText value="#{pessoaBean.pessoa.uf}" id="uf"/>
+
             <h:outputLabel value="Programador: "/>
             <h:selectOneRadio value="#{pessoaBean.pessoa.nivelProgramador}" layout="pageDirection">
                 <f:selectItem itemValue="J" itemLabel="Junior"/>
@@ -139,7 +164,7 @@
                 </f:facet>
                 <h:commandButton value="Editar" image="img/edicao.png" style="width: 30px; height: 30px;" immediate="true">
                     <f:setPropertyActionListener value="#{pessoa}" target="#{pessoaBean.pessoa}" /><!-- O setPropertyAction recebe o objeto PESSOA da linha pelo atributo value e devolve para o objeto do Bean por meio do target -->
-                </h:commandButton>
+                    </h:commandButton>
                 <h:outputLabel value="  "/>
                 <h:commandButton value="Excluir" action="#{pessoaBean.excluir()}" image="img/excluir.png" style="width: 30px; height: 30px;" immediate="true" >
                     <f:setPropertyActionListener value="#{pessoa}" target="#{pessoaBean.pessoa}" /><!-- O setPropertyAction recebe o objeto PESSOA da linha pelo atributo value e devolve para o objeto do Bean por meio do target -->
