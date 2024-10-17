@@ -1,6 +1,9 @@
 package br.com.avancard.bean;
 
+import br.com.avancard.jpautil.JPAUtil;
 import br.com.avancard.model.dao.DaoGeneric;
+import br.com.avancard.model.entity.Cidades;
+import br.com.avancard.model.entity.Estados;
 import br.com.avancard.model.entity.Pessoa;
 import br.com.avancard.repository.IDaoPessoa;
 import br.com.avancard.repository.IDaoPessoaImpl;
@@ -12,6 +15,9 @@ import javax.faces.bean.*;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.model.SelectItem;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -28,6 +34,11 @@ public class PessoaBean {
     private Pessoa pessoa = new Pessoa();
     DaoGeneric<Pessoa> dao = new DaoGeneric<Pessoa>();
     private List<Pessoa> pessoas = new ArrayList<Pessoa>();
+    private List<Estados> estados = new ArrayList<Estados>();
+    private List<Cidades> cidades = null;
+   // private Estados estados = null;
+    private Long codigoEstado;
+    private Long codigoCidade;
 
     IDaoPessoa iDaoPessoa = new IDaoPessoaImpl();
 
@@ -58,8 +69,6 @@ public class PessoaBean {
         return "index.jsf";
     }
 
-
-
     public boolean permiteAcesso(String acesso){
         FacesContext context = FacesContext.getCurrentInstance();
         ExternalContext externalContext = context.getExternalContext();
@@ -68,6 +77,7 @@ public class PessoaBean {
     }
 
     public String salvar(){
+        System.out.println(pessoa.getCidades());
         pessoa = dao.merge(pessoa);
         carregarPessoas();
         mostrarMsg("Cadastrado com sucesso!");
@@ -99,10 +109,57 @@ public class PessoaBean {
         mostrarMsg("Removido com sucesso!");
 
     }
+
     @PostConstruct
     public void carregarPessoas(){
         pessoas = dao.getEntityList(Pessoa.class);
     }
+
+    /* Metodo para acessar uma api de CEP e retornar para a tela do sistema */
+    public void pesquisaCep(AjaxBehaviorEvent event){
+        try {
+            URL url = new URL( "https://viacep.com.br/ws/"+pessoa.getCep()+"/json/");
+            URLConnection connection = url.openConnection();
+            InputStream inputStream = connection.getInputStream();
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+
+            String cep = "";
+            StringBuilder json = new StringBuilder();
+
+            while ((cep = bufferedReader.readLine()) != null) {
+                json.append(cep);
+            }
+
+            Pessoa gson = new Gson().fromJson(json.toString(), Pessoa.class);
+
+            pessoa.setLogradouro(gson.getLogradouro());
+            pessoa.setBairro(gson.getBairro());
+            pessoa.setLocalidade(gson.getLocalidade());
+            pessoa.setUf(gson.getUf());
+            pessoa.setComplemento(gson.getComplemento());
+
+        }catch (Exception e) {
+            e.printStackTrace();
+            mostrarMsg("Erro ao cosultar o cep: " + e.getMessage());
+        }
+    }
+
+
+    public void carregaCidades() {
+            cidades = iDaoPessoa.listaCidadesPorId(this.getCodigoEstado());
+        System.out.println(getCodigoEstado());
+        System.out.println(cidades);
+
+    }
+
+    public void editar(){
+        if(pessoa.getCidades() != null){
+            this.codigoEstado =  pessoa.getCidades().getEstados().getId();
+            cidades = iDaoPessoa.listaCidadesPorId(this.getCodigoEstado());
+        }
+        System.out.println(codigoEstado);
+    }
+
 
     public Pessoa getPessoa() {
         return pessoa;
@@ -128,32 +185,36 @@ public class PessoaBean {
         this.pessoas = pessoas;
     }
 
-    /* Metodo para acessar uma api de CEP e retornar para a tela do sistema */
-    public void pesquisaCep(AjaxBehaviorEvent event){
-        try {
-            URL url = new URL( "https://viacep.com.br/ws/"+pessoa.getCep()+"/json/");
-            URLConnection connection = url.openConnection();
-            InputStream inputStream = connection.getInputStream();
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+    public List<Estados> getEstados() {
+        estados = iDaoPessoa.listaEstados();
+        return estados;
+    }
 
-            String cep = "";
-            StringBuilder json = new StringBuilder();
+    public void setEstados(List<Estados> estados) {
+        this.estados = estados;
+    }
 
-            while ((cep = bufferedReader.readLine()) != null) {
-                json.append(cep);
-            }
+    public List<Cidades> getCidades() {
+        return cidades;
+    }
 
-           Pessoa gson = new Gson().fromJson(json.toString(), Pessoa.class);
+    public void setCidades(List<Cidades> cidades) {
+        this.cidades = cidades;
+    }
 
-            pessoa.setLogradouro(gson.getLogradouro());
-            pessoa.setBairro(gson.getBairro());
-            pessoa.setLocalidade(gson.getLocalidade());
-            pessoa.setUf(gson.getUf());
-            pessoa.setComplemento(gson.getComplemento());
+    public Long getCodigoEstado() {
+        return codigoEstado;
+    }
 
-        }catch (Exception e) {
-            e.printStackTrace();
-            mostrarMsg("Erro ao cosultar o cep: " + e.getMessage());
-        }
+    public void setCodigoEstado(Long codigoEstado) {
+        this.codigoEstado = codigoEstado;
+    }
+
+    public Long getCodigoCidade() {
+        return codigoCidade;
+    }
+
+    public void setCodigoCidade(Long codigoCidade) {
+        this.codigoCidade = codigoCidade;
     }
 }

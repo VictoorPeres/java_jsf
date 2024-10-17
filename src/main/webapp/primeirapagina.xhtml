@@ -87,12 +87,6 @@
             <h:outputLabel value="Bairro"/>
             <h:inputText value="#{pessoaBean.pessoa.bairro}" id="bairro"/>
 
-            <h:outputLabel value="Cidade"/>
-            <h:inputText value="#{pessoaBean.pessoa.localidade}" id="cidade"/>
-
-            <h:outputLabel value="UF"/>
-            <h:inputText value="#{pessoaBean.pessoa.uf}" id="uf"/>
-
             <h:outputLabel value="Programador: "/>
             <h:selectOneRadio value="#{pessoaBean.pessoa.nivelProgramador}" layout="pageDirection">
                 <f:selectItem itemValue="J" itemLabel="Junior"/>
@@ -109,6 +103,18 @@
             <f:selectItem itemValue="C#" itemLabel="C#"/>
             <f:selectItem itemValue="Cobol" itemLabel="Cobol"/>
             </h:selectManyCheckbox>
+            <h:outputLabel value="Estados"/>
+            <h:selectOneMenu value="#{pessoaBean.codigoEstado}">
+                <f:selectItem itemLabel="Selecione" noSelectionOption="true"/>
+                <f:selectItems value="#{pessoaBean.estados}" var="est" itemValue="#{est.id}" itemLabel="#{est.nome}"/>
+                <f:ajax event="change" execute="@this" listener="#{pessoaBean.carregaCidades()}" render="cidadesMenu"/>
+            </h:selectOneMenu>
+
+            <h:outputLabel value="Cidades"/>
+            <h:selectOneMenu id="cidadesMenu" value="#{pessoaBean.pessoa.cidades}" converter="cidadeConverter">
+                <f:selectItem itemLabel="Selecione" noSelectionOption="true"/>
+                <f:selectItems value="#{pessoaBean.cidades}" var="cidade" itemValue="#{cidade}" itemLabel="#{cidade.nome}" />
+            </h:selectOneMenu>
 
         <h:outputLabel/>
         <h:panelGroup>
@@ -163,7 +169,7 @@
                 <f:facet name="header">
                     <h3><h:outputText value="AÇÃO"/></h3>
                 </f:facet>
-                <h:commandButton value="Editar" image="img/edicao.png" style="width: 30px; height: 30px;" immediate="true">
+                <h:commandButton value="Editar" image="img/edicao.png" style="width: 30px; height: 30px;" immediate="true" action="#{pessoaBean.editar}">
                     <f:setPropertyActionListener value="#{pessoa}" target="#{pessoaBean.pessoa}" /><!-- O setPropertyAction recebe o objeto PESSOA da linha pelo atributo value e devolve para o objeto do Bean por meio do target -->
                     </h:commandButton>
                 <h:outputLabel value="  "/>

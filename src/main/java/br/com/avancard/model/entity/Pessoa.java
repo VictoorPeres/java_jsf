@@ -37,6 +37,18 @@ public class Pessoa implements Serializable {
     @Column(name = "nm_cidade")
     private String localidade;
     private String uf;
+    @Transient /*Faz com que o atributo não fique persistente ou não grarve no banco*/
+    private Estados estados;
+    @OneToOne
+    @JoinColumn(name = "cidades_id")
+    private Cidades cidades;
+
+    @Column(columnDefinition = "text") /* tipo de text grava arquivos em base 64 */
+    private String fotoIconBase64;
+    private String extensao; /* extensão JPG, PNG,  JPEG */
+    @Lob/* Gravar arquivos no banco de dados */
+    @Basic(fetch = FetchType.LAZY)
+    private byte[] fotoIconBase64Original;
 
     public Pessoa() {
 
@@ -200,6 +212,46 @@ public class Pessoa implements Serializable {
 
     public void setUf(String uf) {
         this.uf = uf;
+    }
+
+    public Cidades getCidades() {
+        return cidades;
+    }
+
+    public void setCidades(Cidades cidades) {
+        this.cidades = cidades;
+    }
+
+    public Estados getEstados() {
+        return estados;
+    }
+
+    public void setEstados(Estados estados) {
+        this.estados = estados;
+    }
+
+    public String getFotoIconBase64() {
+        return fotoIconBase64;
+    }
+
+    public void setFotoIconBase64(String fotoIconBase64) {
+        this.fotoIconBase64 = fotoIconBase64;
+    }
+
+    public String getExtensao() {
+        return extensao;
+    }
+
+    public void setExtensao(String extensao) {
+        this.extensao = extensao;
+    }
+
+    public byte[] getFotoIconBase64Original() {
+        return fotoIconBase64Original;
+    }
+
+    public void setFotoIconBase64Original(byte[] fotoIconBase64Original) {
+        this.fotoIconBase64Original = fotoIconBase64Original;
     }
 
     @Override
