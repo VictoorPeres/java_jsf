@@ -1,6 +1,9 @@
 package br.com.avancard.model.entity;
 
+import org.hibernate.validator.constraints.br.CPF;
+
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
@@ -15,12 +18,22 @@ public class Pessoa implements Serializable {
     @Column(name = "cd_pessoa", unique = true, nullable = false)
     private long id;
     @Column(name = "nm_pessoa", nullable = false)
+    @NotEmpty(message = "O nome deve ser informado")
+    @NotNull(message = "O nome deve ser informado")
+    @Size(min = 5, max = 20, message = "Nome deve ter entre 5 e 20 caracteres")
     private String nome;
+    @NotEmpty(message = "O sobrenome deve ser informado")
+    @NotNull(message = "O sobrenome deve ser informado")
     @Column(nullable = false)
     private String sobrenome;
+    @NotEmpty(message = "Preencha o campo idade")
+    @NotNull(message = "Preencha o campo idade")
     private int idade;
     @Temporal(TemporalType.DATE)
+    @Future(message = "A data de nascimento não pode ser maior que a data atual")
     private Date dataNascimento;
+    @NotEmpty(message = "Preencha o campo sexo")
+    @NotNull(message = "Preencha o campo sexo")
     private String sexo;
     private String[] frameworks;
     private Boolean ativo;

@@ -26,9 +26,7 @@
             <h:outputLabel value="Foto"/>
             <h:inputFile id="foto" value="#{pessoaBean.arquivoFoto}"></h:inputFile>
         <h:outputLabel for="nome" value="Nome" />
-            <h:inputText id="nome" value="#{pessoaBean.pessoa.nome}" required="true" requiredMessage="Informe o nome do usuário" validatorMessage="O nome deve conter no mínimo 3 letras" pt:placeholder="Digite seu nome...">
-                <f:validateLength minimum="3" maximum="15"/>
-            </h:inputText>
+            <h:inputText id="nome" value="#{pessoaBean.pessoa.nome}" pt:placeholder="Digite seu nome..."/>
         <h:outputLabel value="Sobrenome" />
         <h:inputText value="#{pessoaBean.pessoa.sobrenome}" required="true" requiredMessage="Informe o sobrenome do usuário" validatorMessage="O sobrenome deve conter no mínimo 5 letras">
             <f:validateLength minimum="5" maximum="50"/>
