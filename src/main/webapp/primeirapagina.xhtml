@@ -16,13 +16,15 @@
 
 <ui:include src="menu.xhtml"/>
 
-    <h:form id="formPessoa" rendered="#{pessoaBean.permiteAcesso('Administrador')}">
+    <h:form id="formPessoa" enctype="multipart/form-data" rendered="#{pessoaBean.permiteAcesso('Administrador')}">
         <h:messages infoStyle="color: black; background-color: seagreen; width: 170px; padding: 4px"/>
         <h:panelGrid columns="2">
             <f:facet name="header">
                 <h:graphicImage value="./img/java.png" width="120" height="150"/>
                 <h1><h:outputText value="Cadastro de Usuário"/></h1>
             </f:facet>
+            <h:outputLabel value="Foto"/>
+            <h:inputFile id="foto" value="#{pessoaBean.arquivoFoto}"></h:inputFile>
         <h:outputLabel for="nome" value="Nome" />
             <h:inputText id="nome" value="#{pessoaBean.pessoa.nome}" required="true" requiredMessage="Informe o nome do usuário" validatorMessage="O nome deve conter no mínimo 3 letras" pt:placeholder="Digite seu nome...">
                 <f:validateLength minimum="3" maximum="15"/>
@@ -144,6 +146,13 @@
                     <h4><h:outputText value="NOME"/></h4>
                 </f:facet>
                 <h:outputLabel value="#{pessoa.nome}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">FOTO</f:facet>
+                <h:commandLink actionListener="#{pessoaBean.download}">
+                    <h:graphicImage width="60" height="60" value="#{pessoa.fotoIconBase64}"/>
+                    <f:param name="fileDownloadId" value="#{pessoa.id}"/>
+                </h:commandLink>
             </h:column>
             <h:column>
                 <f:facet name="header">

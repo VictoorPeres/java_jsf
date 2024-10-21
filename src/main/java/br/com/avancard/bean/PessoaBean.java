@@ -16,16 +16,21 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
+import javax.imageio.ImageIO;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
+import javax.xml.bind.DatatypeConverter;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @ViewScoped
 @ManagedBean (name = "pessoaBean")
@@ -39,7 +44,7 @@ public class PessoaBean {
    // private Estados estados = null;
     private Long codigoEstado;
     private Long codigoCidade;
-
+    private Part arquivoFoto; /* Pega o arquivo que o usuario selecionou para fazer o upload e cria temporariamente do lado do servidor, para obtermos no sistema e depois processar  */
     IDaoPessoa iDaoPessoa = new IDaoPessoaImpl();
 
 
@@ -76,8 +81,38 @@ public class PessoaBean {
         return pessoaUser.getPerfilUsuario().equals(acesso);
     }
 
-    public String salvar(){
-        System.out.println(pessoa.getCidades());
+    public String salvar() throws IOException{
+        /* Processar imagem */
+        byte[] imagemByte = getByte(arquivoFoto.getInputStream());
+        pessoa.setFotoIconBase64Original(imagemByte); /* Salva a imagem original */
+
+        /* transformar em bufferimage */
+        BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(imagemByte));
+
+        /* Pega o tipo da imagem */
+        int type = bufferedImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : bufferedImage.getType();
+
+        int largura = 200;
+        int altura = 200;
+
+        /* Criar miniatura */
+        BufferedImage resizedImage = new BufferedImage(largura, altura, type);
+        Graphics2D g = resizedImage.createGraphics();
+        g.drawImage(bufferedImage, 0, 0, altura, largura,null);
+        g.dispose();
+
+        /* Escrever novamente a imagem em tamanho menor */
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        String extensao = arquivoFoto.getContentType().split("\\/")[1]; /* image/png */
+        ImageIO.write(resizedImage, extensao, baos);
+
+        String miniImagem = "data:" + arquivoFoto.getContentType() + ";base64," + DatatypeConverter.printBase64Binary(baos.toByteArray());
+
+        /* Processar imagem */
+        pessoa.setFotoIconBase64(miniImagem);
+        pessoa.setExtensao(extensao);
+
+
         pessoa = dao.merge(pessoa);
         carregarPessoas();
         mostrarMsg("Cadastrado com sucesso!");
@@ -160,6 +195,43 @@ public class PessoaBean {
         System.out.println(codigoEstado);
     }
 
+    /* Metodo que converte inputStream para array de bytes */
+    private byte[] getByte(InputStream is) throws IOException {
+        int len; /* Variavel de controle */
+        int size = 1024; /* Tamanho padrão */
+        byte[] buf = null; /* o Byte */
+        if(is instanceof ByteArrayInputStream){
+            size = is.available(); /* Retorna o número de bytes que podem ser lidos sem bloquear (útil em alguns contextos, como em fluxos de rede). */
+            buf = new byte[size];
+            len = is.read(buf, 0, size);
+        }else{
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            buf = new byte[size];
+
+            while ((len = is.read(buf, 0, size)) != -1) {
+                bos.write(buf, 0, len);
+            }
+
+            buf = bos.toByteArray();
+        }
+        return buf;
+    }
+
+    public void download() throws IOException {
+        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+        String fileDownloadId = params.get("fileDownloadId");
+
+        Pessoa pessoa = dao.consultar(Pessoa.class, fileDownloadId);
+        HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+
+        response.addHeader("Content-Disposition", "attachment; filename=download." + pessoa.getExtensao());
+        response.setContentType("application/octet-stream");
+        response.setContentLength(pessoa.getFotoIconBase64Original().length);
+        response.getOutputStream().write(pessoa.getFotoIconBase64Original());
+        response.getOutputStream().flush();
+        FacesContext.getCurrentInstance().responseComplete();
+    }
+
 
     public Pessoa getPessoa() {
         return pessoa;
@@ -216,5 +288,13 @@ public class PessoaBean {
 
     public void setCodigoCidade(Long codigoCidade) {
         this.codigoCidade = codigoCidade;
+    }
+
+    public Part getArquivoFoto() {
+        return arquivoFoto;
+    }
+
+    public void setArquivoFoto(Part arquivoFoto) {
+        this.arquivoFoto = arquivoFoto;
     }
 }
