@@ -5,19 +5,27 @@ import br.com.avancard.model.entity.Cidades;
 import br.com.avancard.model.entity.Estados;
 import br.com.avancard.model.entity.Pessoa;
 
-import javax.faces.model.SelectItem;
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-public class IDaoPessoaImpl implements IDaoPessoa{
+@Named
+public class IDaoPessoaImpl implements IDaoPessoa, Serializable {
 
+    private static final long serialVersionUID = 1L;
+
+    @Inject
+    private EntityManager entityManager;
 
     @Override
     public Pessoa consultarPessoa(String login, String senha) {
         Pessoa pessoa = null;
-        EntityManager entityManager = JPAUtil.getEntityManager();
+
         EntityTransaction entityTransaction = entityManager.getTransaction();
         try{
             entityTransaction.begin();
@@ -66,9 +74,6 @@ public class IDaoPessoaImpl implements IDaoPessoa{
 
         List<Estados> estados = new ArrayList<Estados>();
 
-        // Obtém uma instância do EntityManager, que é usada para interagir com o banco de dados.
-        EntityManager entityManager = JPAUtil.getEntityManager();
-
         // Inicia uma transação para garantir que as operações no banco de dados sejam consistentes.
         EntityTransaction entityTransaction = entityManager.getTransaction();
         entityTransaction.begin();
@@ -76,7 +81,7 @@ public class IDaoPessoaImpl implements IDaoPessoa{
         // Executa uma consulta JPQL para buscar todos os registros da tabela 'Estados'.
         // "from Estados" é uma consulta simples que retorna todas as instâncias da entidade Estados.
         List<Estados> getEstados = entityManager.createQuery("from Estados").getResultList();
-
+        entityTransaction.commit();
         // Itera sobre a lista de estados retornados da consulta.
         for (Estados estado : getEstados) {
             // Para cada estado, cria um novo SelectItem.
@@ -92,7 +97,6 @@ public class IDaoPessoaImpl implements IDaoPessoa{
     @Override
     public List<Cidades> listaCidadesPorId(Long id) {
         List<Cidades> cidades = new ArrayList<Cidades>();
-        EntityManager entityManager = JPAUtil.getEntityManager();
         EntityTransaction entityTransaction = entityManager.getTransaction();
         entityTransaction.begin();
         List<Cidades> getCidades = entityManager.createQuery("SELECT c FROM Cidades c WHERE id_estado = " + id).getResultList();
@@ -108,5 +112,27 @@ public class IDaoPessoaImpl implements IDaoPessoa{
         return cidades;
     }
 
-
+    @Override
+    public List<Pessoa> relatorioUsuario(String nome, String cpf) {
+        List<Pessoa> pessoas = null;
+        if((nome != "" || !nome.isEmpty()) && (cpf == "" || cpf.isEmpty())){
+            EntityTransaction entityTransaction = entityManager.getTransaction();
+            entityTransaction.begin();
+            String sql = "select p from Pessoa p where p.nome like :nome";
+            pessoas = entityManager.createQuery(sql, Pessoa.class) .setParameter("nome", "%" + nome + "%").getResultList();
+            entityTransaction.commit();
+            
+        } else if ((nome == "" || nome.isEmpty()) && (cpf != "" || !cpf.isEmpty())) {
+            EntityTransaction entityTransaction = entityManager.getTransaction();
+            entityTransaction.begin();
+            String sql = "select p from Pessoa p where p.cpf = :cpf";
+            pessoas = entityManager.createQuery(sql, Pessoa.class).setParameter("cpf", cpf).getResultList();
+        }else if ((nome != "" || !nome.isEmpty()) && (cpf != "" || !cpf.isEmpty())) {
+            EntityTransaction entityTransaction = entityManager.getTransaction();
+            entityTransaction.begin();
+            String sql = "select p from Pessoa p where p.cpf = :cpf and p.nome like :nome";
+            pessoas = entityManager.createQuery(sql, Pessoa.class).setParameter("cpf", cpf).setParameter("nome", "%" + nome + "%").getResultList();
+        }
+        return pessoas;
+    }
 }

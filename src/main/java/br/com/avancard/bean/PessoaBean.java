@@ -15,8 +15,12 @@ import javax.faces.bean.*;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
+import javax.faces.view.ViewScoped;
 import javax.imageio.ImageIO;
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.servlet.http.HttpServletRequest;
@@ -33,11 +37,13 @@ import java.util.List;
 import java.util.Map;
 
 @ViewScoped
-@ManagedBean (name = "pessoaBean")
-public class PessoaBean {
+@Named(value = "pessoaBean")
+public class PessoaBean implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     private Pessoa pessoa = new Pessoa();
-    DaoGeneric<Pessoa> dao = new DaoGeneric<Pessoa>();
+
+
     private List<Pessoa> pessoas = new ArrayList<Pessoa>();
     private List<Estados> estados = new ArrayList<Estados>();
     private List<Cidades> cidades = null;
@@ -45,7 +51,12 @@ public class PessoaBean {
     private Long codigoEstado;
     private Long codigoCidade;
     private Part arquivoFoto; /* Pega o arquivo que o usuario selecionou para fazer o upload e cria temporariamente do lado do servidor, para obtermos no sistema e depois processar  */
-    IDaoPessoa iDaoPessoa = new IDaoPessoaImpl();
+
+    @Inject
+    DaoGeneric<Pessoa> dao;
+    @Inject
+    IDaoPessoa iDaoPessoa;
+
 
 
     public String logout(){
@@ -70,6 +81,8 @@ public class PessoaBean {
             externalContext.getSessionMap().put("usuarioLogado", pessoaUser);
 
             return "primeirapagina.jsf";
+        }else{
+            FacesContext.getCurrentInstance().addMessage("msg", new FacesMessage("Credenciais inválidas"));
         }
         return "index.jsf";
     }
@@ -82,41 +95,51 @@ public class PessoaBean {
     }
 
     public String salvar() throws IOException{
-        /* Processar imagem */
-        byte[] imagemByte = getByte(arquivoFoto.getInputStream());
-        pessoa.setFotoIconBase64Original(imagemByte); /* Salva a imagem original */
+        if(this.arquivoFoto != null) {
+            /* Processar imagem */
+            byte[] imagemByte = getByte(arquivoFoto.getInputStream());
+            pessoa.setFotoIconBase64Original(imagemByte); /* Salva a imagem original */
 
-        /* transformar em bufferimage */
-        BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(imagemByte));
+            /* transformar em bufferimage */
+            BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(imagemByte));
 
-        /* Pega o tipo da imagem */
-        int type = bufferedImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : bufferedImage.getType();
+            /* Pega o tipo da imagem */
+            int type = bufferedImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : bufferedImage.getType();
 
-        int largura = 200;
-        int altura = 200;
+            int largura = 200;
+            int altura = 200;
 
-        /* Criar miniatura */
-        BufferedImage resizedImage = new BufferedImage(largura, altura, type);
-        Graphics2D g = resizedImage.createGraphics();
-        g.drawImage(bufferedImage, 0, 0, altura, largura,null);
-        g.dispose();
+            /* Criar miniatura */
+            BufferedImage resizedImage = new BufferedImage(largura, altura, type);
+            Graphics2D g = resizedImage.createGraphics();
+            g.drawImage(bufferedImage, 0, 0, altura, largura, null);
+            g.dispose();
 
-        /* Escrever novamente a imagem em tamanho menor */
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        String extensao = arquivoFoto.getContentType().split("\\/")[1]; /* image/png */
-        ImageIO.write(resizedImage, extensao, baos);
+            /* Escrever novamente a imagem em tamanho menor */
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            String extensao = arquivoFoto.getContentType().split("\\/")[1]; /* image/png */
+            ImageIO.write(resizedImage, extensao, baos);
 
-        String miniImagem = "data:" + arquivoFoto.getContentType() + ";base64," + DatatypeConverter.printBase64Binary(baos.toByteArray());
+            String miniImagem = "data:" + arquivoFoto.getContentType() + ";base64," + DatatypeConverter.printBase64Binary(baos.toByteArray());
 
-        /* Processar imagem */
-        pessoa.setFotoIconBase64(miniImagem);
-        pessoa.setExtensao(extensao);
-
+            /* Processar imagem */
+            pessoa.setFotoIconBase64(miniImagem);
+            pessoa.setExtensao(extensao);
+        }
 
         pessoa = dao.merge(pessoa);
         carregarPessoas();
         mostrarMsg("Cadastrado com sucesso!");
         return "";
+    }
+
+    public void registraLog(){
+        System.out.println("Método registra log");
+    }
+
+    public void mudancaDeValor(ValueChangeEvent event){
+        System.out.println("Valor anterior: " + event.getOldValue());
+        System.out.println("Valor atual: " + event.getNewValue());
     }
 
     private void mostrarMsg(String msg) {
@@ -147,7 +170,7 @@ public class PessoaBean {
 
     @PostConstruct
     public void carregarPessoas(){
-        pessoas = dao.getEntityList(Pessoa.class);
+        pessoas = dao.getEntityListTopDez(Pessoa.class);
     }
 
     /* Metodo para acessar uma api de CEP e retornar para a tela do sistema */
@@ -193,6 +216,7 @@ public class PessoaBean {
             cidades = iDaoPessoa.listaCidadesPorId(this.getCodigoEstado());
         }
         System.out.println(codigoEstado);
+        System.out.println(pessoa.getId());
     }
 
     /* Metodo que converte inputStream para array de bytes */

@@ -4,23 +4,31 @@ import br.com.avancard.model.dao.DaoGeneric;
 import br.com.avancard.model.entity.Lancamento;
 import br.com.avancard.model.entity.Pessoa;
 import br.com.avancard.repository.IDaoLancamento;
-import br.com.avancard.repository.IDaoLancamentoImpl;
 
 import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @ViewScoped
-@ManagedBean(name = "lancamentoBean")
-public class LancamentoBean {
+@Named(value = "lancamentoBean")
+public class LancamentoBean implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     private Lancamento lancamento = new Lancamento();
-    private DaoGeneric<Lancamento> dao = new DaoGeneric<Lancamento>();
     private List<Lancamento> lancamentos = new ArrayList<Lancamento>();
-    private IDaoLancamento daoLancamento = new IDaoLancamentoImpl();
+
+    @Inject
+    private DaoGeneric<Lancamento> dao;
+    @Inject
+    private IDaoLancamento daoLancamento;
 
 
 
@@ -39,17 +47,31 @@ public class LancamentoBean {
         FacesContext context = FacesContext.getCurrentInstance();
         ExternalContext externalContext = context.getExternalContext();
         Pessoa pessoa = (Pessoa) externalContext.getSessionMap().get("usuarioLogado");
-        lancamentos = daoLancamento.consultarLancamentoUsuario(pessoa.getId());
+        lancamentos = daoLancamento.consultarTopDez(pessoa.getId());
     }
 
-    public void novo(){
+    public String novo(){
         lancamento = new Lancamento();
+        return "";
+    }
+
+    public String limpar(){
+
+        lancamento = new Lancamento();
+        return "";
     }
 
     public void excluir(){
         dao.delete(lancamento);
         lancamento = new Lancamento();
         carregarLancamentos();
+        mostrarMsg("Exclusão realizada com sucesso!");
+    }
+
+    private void mostrarMsg(String msg) {
+        FacesContext context = FacesContext.getCurrentInstance();
+        FacesMessage message = new FacesMessage(msg);
+        context.addMessage(null, message);
     }
 
     public Lancamento getLancamento() {

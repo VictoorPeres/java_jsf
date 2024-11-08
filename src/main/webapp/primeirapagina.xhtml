@@ -3,9 +3,9 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:b="http://bootsfaces.net/ui"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui"
       xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
 
 <h:head>
@@ -15,110 +15,163 @@
 <h:body>
 
 <ui:include src="menu.xhtml"/>
+    <b:messages autoUpdate="true"/>
+    <h:form id="formPessoa" enctype="multipart/form-data" rendered="#{pessoaBean.permiteAcesso('Administrador')}" style="margin-left: 35%">
 
-    <h:form id="formPessoa" enctype="multipart/form-data" rendered="#{pessoaBean.permiteAcesso('Administrador')}">
-        <h:messages infoStyle="color: black; background-color: seagreen; width: 170px; padding: 4px"/>
-        <h:panelGrid columns="2">
+        <h:panelGrid columns="4">
             <f:facet name="header">
                 <h:graphicImage value="./img/java.png" width="120" height="150"/>
                 <h1><h:outputText value="Cadastro de Usuário"/></h1>
             </f:facet>
-            <h:outputLabel value="Foto"/>
-            <h:inputFile id="foto" value="#{pessoaBean.arquivoFoto}"></h:inputFile>
-        <h:outputLabel for="nome" value="Nome" />
-            <h:inputText id="nome" value="#{pessoaBean.pessoa.nome}" pt:placeholder="Digite seu nome..."/>
-        <h:outputLabel value="Sobrenome" />
-        <h:inputText value="#{pessoaBean.pessoa.sobrenome}" required="true" requiredMessage="Informe o sobrenome do usuário" validatorMessage="O sobrenome deve conter no mínimo 5 letras">
-            <f:validateLength minimum="5" maximum="50"/>
-        </h:inputText>
-        <h:outputLabel value="Idade" />
-        <h:inputText value="#{pessoaBean.pessoa.idade}"/>
-        <h:outputLabel value="Nascimento" />
-        <h:inputText  value="#{pessoaBean.pessoa.dataNascimento}" converterMessage="O formato da data está incorreto">
-        <f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Manaus"/>
-        </h:inputText>
-        <h:outputLabel value="Login" />
-        <h:inputText value="#{pessoaBean.pessoa.login}" />
-        <h:outputLabel value="Senha" />
-        <h:inputSecret value="#{pessoaBean.pessoa.senha}" />
 
-            <h:outputLabel value="Perfil"/>
-            <h:selectOneMenu id="campoPerfil" value="#{pessoaBean.pessoa.perfilUsuario}">
-                <f:selectItem itemLabel="Selecione" noSelectionOption="true"/>
-                <f:selectItem itemValue="Convidado"/>
-                <f:selectItem itemValue="Administrador"/>
-            </h:selectOneMenu>
+            <b:panel style="width:50%;">
+            <b:column>
+                <h:outputLabel value="Foto"/>
+                <h:inputFile id="foto" value="#{pessoaBean.arquivoFoto}"></h:inputFile>
+            </b:column>
 
-            <h:outputLabel value="Sexo"/>
-        <h:selectOneMenu id="campoSexo" value="#{pessoaBean.pessoa.sexo}">
-            <f:selectItem itemLabel="Selecione" noSelectionOption="true"/>
-            <f:selectItem itemValue="MASCULINO" itemLabel="Masculino"/>
-            <f:selectItem itemValue="FEMININO" itemLabel="Feminino"/>
-        </h:selectOneMenu>
+            <b:column>
+                <h:outputLabel for="nome" value="Nome" />
+                <b:inputText id="nome" value="#{pessoaBean.pessoa.nome}" valueChangeListener="#{pessoaBean.mudancaDeValor}" pt:placeholder="Digite seu nome..."/>
+            </b:column>
 
+            <b:column>
+                <h:outputLabel value="Sobrenome" />
+                    <b:inputText value="#{pessoaBean.pessoa.sobrenome}" required="true" requiredMessage="Informe o sobrenome do usuário" validatorMessage="O sobrenome deve conter no mínimo 5 letras">
+                        <f:validateLength minimum="5" maximum="50"/>
+                    </b:inputText>
+            </b:column>
+
+                <b:column>
+                    <h:outputLabel value="CPF" />
+                    <b:inputText value="#{pessoaBean.pessoa.cpf}" required="true" requiredMessage="Informe um CPF"/>
+                </b:column>
+
+            <b:column>
+                <h:outputLabel value="Idade" />
+                <b:inputText value="#{pessoaBean.pessoa.idade}" mask="numeric"/>
+            </b:column>
+
+            <b:column>
+                <h:outputLabel value="Nascimento" />
+                <b:datepicker  value="#{pessoaBean.pessoa.dataNascimento}"/>
+            </b:column>
+
+            <b:column>
+                <h:outputLabel value="Login" />
+                <b:inputText value="#{pessoaBean.pessoa.login}" />
+            </b:column>
+
+            <b:column>
+                <h:outputLabel value="Senha" />
+                <b:inputSecret value="#{pessoaBean.pessoa.senha}" />
+            </b:column>
+
+            <b:column>
+                <h:outputLabel value="Perfil"/>
+                <b:selectOneMenu id="campoPerfil" value="#{pessoaBean.pessoa.perfilUsuario}" select2="true">
+                    <f:selectItem itemLabel="Selecione" noSelectionOption="true"/>
+                    <f:selectItem itemValue="Convidado"/>
+                    <f:selectItem itemValue="Administrador"/>
+                </b:selectOneMenu>
+            </b:column>
+
+            <b:column>
+                <h:outputLabel value="Sexo"/>
+                <b:selectOneMenu id="campoSexo" value="#{pessoaBean.pessoa.sexo}" select2="true">
+                    <f:selectItem itemLabel="Selecione" noSelectionOption="true"/>
+                    <f:selectItem itemValue="MASCULINO" itemLabel="Masculino"/>
+                    <f:selectItem itemValue="FEMININO" itemLabel="Feminino"/>
+                </b:selectOneMenu>
+            </b:column>
+
+            <b:column>
             <h:outputLabel value="Frameworks"/>
-            <h:selectManyMenu id="campoFrameworks" style="height: 150px;" value="#{pessoaBean.pessoa.frameworks}">
-                <f:selectItem itemValue="Hibernate" />
-                <f:selectItem itemValue="Spring MVC" />
-                <f:selectItem itemValue="JPA" />
-                <f:selectItem itemValue="Prime Faces" />
-                <f:selectItem itemValue="JFS" />
-            </h:selectManyMenu>
+                <h:selectManyMenu id="campoFrameworks" style="height: 150px;" value="#{pessoaBean.pessoa.frameworks}">
+                    <f:selectItem itemValue="Hibernate" />
+                    <f:selectItem itemValue="Spring MVC" />
+                    <f:selectItem itemValue="JPA" />
+                    <f:selectItem itemValue="Prime Faces" />
+                    <f:selectItem itemValue="JFS" />
+                </h:selectManyMenu>
+            </b:column>
 
-            <h:outputLabel value="Ativo"/>
-            <h:selectBooleanCheckbox value="#{pessoaBean.pessoa.ativo}"/>
+            <b:column>
+                <h:outputLabel value="Ativo"/>
+                <h:selectBooleanCheckbox value="#{pessoaBean.pessoa.ativo}"/>
+            </b:column>
 
-            <h:outputLabel value="CEP"/>
-            <h:inputText value="#{pessoaBean.pessoa.cep}">
-                <f:ajax event="blur" execute="@this"
-                        listener="#{pessoaBean.pesquisaCep(pageContext)}"
-                        render="logradouro complemento bairro cidade uf"/>
-            </h:inputText>
+            <b:column>
+                <h:outputLabel value="CEP"/>
+                <b:inputText value="#{pessoaBean.pessoa.cep}" mask="99999-999">
+                    <f:ajax event="blur" execute="@this"
+                            listener="#{pessoaBean.pesquisaCep(pageContext)}"
+                            render="logradouro complemento bairro"/>
+                </b:inputText>
+            </b:column>
 
-            <h:outputLabel value="Logradouro"/>
-            <h:inputText value="#{pessoaBean.pessoa.logradouro}" id="logradouro"/>
+            <b:column>
+                <h:outputLabel value="Logradouro"/>
+                <b:inputText value="#{pessoaBean.pessoa.logradouro}" id="logradouro"/>
+            </b:column>
 
-            <h:outputLabel value="Complemento"/>
-            <h:inputText value="#{pessoaBean.pessoa.complemento}" id="complemento"/>
 
-            <h:outputLabel value="Numero"/>
-            <h:inputText value="#{pessoaBean.pessoa.numero}" id="numero"/>
 
-            <h:outputLabel value="Bairro"/>
-            <h:inputText value="#{pessoaBean.pessoa.bairro}" id="bairro"/>
+            <b:column>
+                <h:outputLabel value="Complemento"/>
+                <b:inputText value="#{pessoaBean.pessoa.complemento}" id="complemento"/>
+            </b:column>
 
+            <b:column>
+                <h:outputLabel value="Numero"/>
+                <b:inputText value="#{pessoaBean.pessoa.numero}" id="numero"/>
+            </b:column>
+
+            <b:column>
+                <h:outputLabel value="Bairro"/>
+                <b:inputText value="#{pessoaBean.pessoa.bairro}" id="bairro"/>
+            </b:column>
+
+            <b:column>
             <h:outputLabel value="Programador: "/>
-            <h:selectOneRadio value="#{pessoaBean.pessoa.nivelProgramador}" layout="pageDirection">
-                <f:selectItem itemValue="J" itemLabel="Junior"/>
-                <f:selectItem itemValue="P" itemLabel="Pleno"/>
-                <f:selectItem itemValue="S" itemLabel="Senior"/>
-                <f:selectItem itemValue="E" itemLabel="Especialista"/>
-            </h:selectOneRadio>
+                <h:selectOneRadio value="#{pessoaBean.pessoa.nivelProgramador}" layout="pageDirection">
+                    <f:selectItem itemValue="J" itemLabel="Junior"/>
+                    <f:selectItem itemValue="P" itemLabel="Pleno"/>
+                    <f:selectItem itemValue="S" itemLabel="Senior"/>
+                    <f:selectItem itemValue="E" itemLabel="Especialista"/>
+                </h:selectOneRadio>
+            </b:column>
 
-            <h:outputLabel value="Linguagens"/>
-            <h:selectManyCheckbox value="#{pessoaBean.pessoa.linguagens}">
-            <f:selectItem itemValue="Java" itemLabel="Java"/>
-            <f:selectItem itemValue="PHP" itemLabel="PHP"/>
-            <f:selectItem itemValue="Pyton" itemLabel="Pyton"/>
-            <f:selectItem itemValue="C#" itemLabel="C#"/>
-            <f:selectItem itemValue="Cobol" itemLabel="Cobol"/>
-            </h:selectManyCheckbox>
-            <h:outputLabel value="Estados"/>
-            <h:selectOneMenu value="#{pessoaBean.codigoEstado}">
-                <f:selectItem itemLabel="Selecione" noSelectionOption="true"/>
-                <f:selectItems value="#{pessoaBean.estados}" var="est" itemValue="#{est.id}" itemLabel="#{est.nome}"/>
-                <f:ajax event="change" execute="@this" listener="#{pessoaBean.carregaCidades()}" render="cidadesMenu"/>
-            </h:selectOneMenu>
+            <b:column>
+                <h:outputLabel value="Linguagens"/>
+                <h:selectManyCheckbox value="#{pessoaBean.pessoa.linguagens}">
+                    <f:selectItem itemValue="Java" itemLabel="Java"/>
+                    <f:selectItem itemValue="PHP" itemLabel="PHP"/>
+                    <f:selectItem itemValue="Pyton" itemLabel="Pyton"/>
+                    <f:selectItem itemValue="C#" itemLabel="C#"/>
+                    <f:selectItem itemValue="Cobol" itemLabel="Cobol"/>
+                </h:selectManyCheckbox>
+            </b:column>
 
-            <h:outputLabel value="Cidades"/>
-            <h:selectOneMenu id="cidadesMenu" value="#{pessoaBean.pessoa.cidades}" converter="cidadeConverter">
-                <f:selectItem itemLabel="Selecione" noSelectionOption="true"/>
-                <f:selectItems value="#{pessoaBean.cidades}" var="cidade" itemValue="#{cidade}" itemLabel="#{cidade.nome}" />
-            </h:selectOneMenu>
+            <b:column>
+                <h:outputLabel value="Estados"/>
+                <b:selectOneMenu value="#{pessoaBean.codigoEstado}" select2="true">
+                    <f:selectItem itemLabel="Selecione" noSelectionOption="true"/>
+                    <f:selectItems value="#{pessoaBean.estados}" var="est" itemValue="#{est.id}" itemLabel="#{est.nome}"/>
+                    <f:ajax event="change" execute="@this" listener="#{pessoaBean.carregaCidades()}" render="cidadesMenu"/>
+                </b:selectOneMenu>
+            </b:column>
 
-        <h:outputLabel/>
+            <b:column>
+                <h:outputLabel value="Cidades"/>
+                    <b:selectOneMenu id="cidadesMenu" value="#{pessoaBean.pessoa.cidades}" converter="cidadeConverter" select2="true">
+                        <f:selectItem itemLabel="Selecione" noSelectionOption="true"/>
+                        <f:selectItems value="#{pessoaBean.cidades}" var="cidade" itemValue="#{cidade}" itemLabel="#{cidade.nome}" />
+                    </b:selectOneMenu>
+                <h:outputLabel/>
+            </b:column>
         <h:panelGroup>
-        <h:commandButton value="Salvar" action="#{pessoaBean.salvar()}" image="img/salvar-dados.png" style="width: 30px; height: 30px; margin-left: 1cm;"/>
+        <h:commandButton value="Salvar" actionListener="#{pessoaBean.registraLog()}" action="#{pessoaBean.salvar()}" image="img/salvar-dados.png" style="width: 30px; height: 30px; margin-left: 1cm;"/>
         <h:commandButton value="Novo" action="#{pessoaBean.novo()}" id="botaoNovo" image="img/novo-usuario.png" style="width: 30px; height: 30px; margin-left: 1cm;" immediate="true">
         <f:ajax execute="botaoNovo" render="@form"/>
         </h:commandButton>
@@ -126,10 +179,11 @@
             <f:ajax execute="botaoLimpar" render="@form"/>
         </h:commandButton>
         </h:panelGroup>
+            </b:panel>
         </h:panelGrid>
     </h:form>
     <h:form>
-        <h:dataTable value="#{pessoaBean.pessoas}" var="pessoa" border="3" cellpadding="5">
+        <b:dataTable value="#{pessoaBean.pessoas}" var="pessoa" border="3" cellpadding="5">
             <f:facet name="header">
                 <h2><h:outputText value="Lista de usuários cadastrados"/></h2>
             </f:facet>
@@ -185,7 +239,7 @@
                 </h:commandButton>
             </h:column>
 
-        </h:dataTable>
+        </b:dataTable>
 </h:form>
 
 </h:body>

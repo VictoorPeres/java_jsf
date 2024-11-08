@@ -2,6 +2,7 @@ package br.com.avancard.model.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Objects;
 
 @Entity
@@ -19,6 +20,12 @@ public class Lancamento implements Serializable {
     @ManyToOne(optional = false)
     @JoinColumn(name = "usuario_fk", nullable = false)
     private Pessoa usuario;
+
+    @Temporal(TemporalType.DATE)
+    private Date dataIni;
+
+    @Temporal(TemporalType.DATE)
+    private Date dataFim;
 
     public Long getId() {
         return id;
@@ -58,6 +65,22 @@ public class Lancamento implements Serializable {
 
     public void setUsuario(Pessoa usuario) {
         this.usuario = usuario;
+    }
+
+    public Date getDataIni() {
+        return dataIni;
+    }
+
+    public void setDataIni(Date dataIni) {
+        this.dataIni = dataIni;
+    }
+
+    public Date getDataFim() {
+        return dataFim;
+    }
+
+    public void setDataFim(Date dataFim) {
+        this.dataFim = dataFim;
     }
 
     @Override

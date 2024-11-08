@@ -5,6 +5,7 @@ import br.com.avancard.model.entity.Estados;
 import br.com.avancard.model.entity.Pessoa;
 
 import javax.faces.model.SelectItem;
+import java.util.Date;
 import java.util.List;
 
 public interface IDaoPessoa {
@@ -13,5 +14,6 @@ public interface IDaoPessoa {
     //List<SelectItem> listaEstados();
     public List<Estados> listaEstados();
     public List<Cidades> listaCidadesPorId(Long id);
+    public List<Pessoa> relatorioUsuario(String nome, String cpf);
 
     }

@@ -3,6 +3,7 @@ package br.com.avancard.filter;
 import br.com.avancard.jpautil.JPAUtil;
 import br.com.avancard.model.entity.Pessoa;
 
+import javax.inject.Inject;
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
@@ -11,6 +12,10 @@ import java.io.IOException;
 
 @WebFilter(urlPatterns = {"/*"})/* é uma anotação usada em Java para declarar um filtro de servlet em aplicações web. Ela faz parte da especificação Java Servlet e permite que você intercepte e modifique requisições e respostas HTTP antes que cheguem a um servlet ou depois que saiam de um servlet. */
 public class FilterAutenticacao implements Filter {
+
+    @Inject
+    private JPAUtil jpaUtil;
+
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
@@ -31,7 +36,7 @@ public class FilterAutenticacao implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        JPAUtil.getEntityManager();
+        jpaUtil.getEntityManager();
     }
 
     @Override

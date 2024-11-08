@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+
+
+<h:head>
+    <title> Usuário </title>
+</h:head>
+<h:body>
+    <ui:include src="menu.xhtml"/>
+
+    <b:messages/>
+    <h:form id="formUsuario" >
+            <b:panelGrid columns="2">
+            <b:column>
+                <h:outputLabel value="CPF"/>
+                <b:inputText value="${relUsuario.cpf}"/>
+            </b:column>
+
+            <b:column>
+                <h:outputLabel value="Nome"/>
+                <b:inputText value="${relUsuario.nome}"/>
+            </b:column>
+
+                <b:commandButton ajax="false" value="Buscar" action="#{relUsuario.buscarUsuario()}" look="primary" style="margin-left:15px;"/>
+            </b:panelGrid>
+
+
+    </h:form>
+<br/>
+<br/>
+<br/>
+    <b:form>
+            <b:dataTable value="#{relUsuario.pessoas}" var="pessoa" border="3" cellpadding="5" pdf="true" excel="true">
+                <b:dataTableColumn value="#{pessoa.id}"/>
+                <b:dataTableColumn value="#{pessoa.nome}"/>
+                <b:dataTableColumn value="#{pessoa.cpf}"/>
+                <b:dataTableColumn value="#{pessoa.dataNascimento}"/>
+                <b:dataTableColumn value="#{pessoa.sexo}"/>
+                <b:dataTableColumn value="#{pessoa.idade}"/>
+            </b:dataTable>
+    </b:form>
+</h:body>
+</html>

@@ -3,13 +3,27 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:b="http://bootsfaces.net/ui"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 <h:body>
+
    <h:form>
-      <h:commandLink style="margin-left: 1cm" value="Administração" action="primeirapagina" rendered="#{pessoaBean.permiteAcesso('Administrador')}"/>
-      <h:commandLink style="margin-left: 1cm" value="Lançamentos" action="lancamento"/>
-      <h:commandLink style="margin-left: 1cm" value="Trocar Usuário" action="#{pessoaBean.logout()}"/>
+
+
+      <b:navBar brand="Menu" fluid="true">
+         <b:navbarLinks>
+            <b:navCommandLink  action="primeirapagina" value="Administração" rendered="#{pessoaBean.permiteAcesso('Administrador')}"/>
+            <b:navCommandLink action="lancamento" value="Lançamentos" rendered="#{pessoaBean.permiteAcesso('Administrador')}"/>
+            <b:dropMenu value="Relatórios" >
+            <b:navCommandLink value="Rel. Notas" action="rellancamento"/>
+            <b:navCommandLink value="Rel. Usuarios" action="relusuario"/>
+            </b:dropMenu>
+            <b:navCommandLink action="#{pessoaBean.logout()}" value="Trocar Usuário" rendered="#{pessoaBean.permiteAcesso('Administrador')}"/>
+         </b:navbarLinks>
+      </b:navBar>
    </h:form>
+
+
 </h:body>
 </html>

@@ -3,27 +3,39 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:b="http://bootsfaces.net/ui"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
 <h:head>
     <title>Login</title>
 </h:head>
 
 <h:body>
 
-    <h:form id="formLogin" style="margin-top: 22%; margin-left: 42%">
+    <b:form id="formLogin" style="margin-top: 10%; margin-left: 35%;" >
+    <b:messages autoUpdate="true" id="msg"/>
         <h1>Realize o login</h1>
-        <h:panelGrid columns="2">
+        <b:panelGrid columns="2">
+            <b:panel>
 
-            <h:outputLabel value="Login" />
-            <h:inputText value="#{pessoaBean.pessoa.login}"/>
+            <b:column>
+                <h:outputLabel value="Usuário" />
+                <b:inputText id="login" value="#{pessoaBean.pessoa.login}" required="true" requiredMessage="Informe o seu nome de usuário"/>
+            </b:column>
 
-            <h:outputLabel value="Senha"/>
-            <h:inputSecret value="#{pessoaBean.pessoa.senha}"/>
+            <b:column>
+                <h:outputLabel value="Senha"/>
+                <b:inputSecret id="senha" value="#{pessoaBean.pessoa.senha}" required="true" requiredMessage="Informe sua senha"/>
+            </b:column>
 
-            <h:commandButton value="Entrar" action="#{pessoaBean.login()}" />
-        </h:panelGrid>
-    </h:form>
+            <b:column>
+                <b:commandButton value="Entrar" action="#{pessoaBean.login()}" look="success" style="width:100%;" />
+            </b:column>
+            </b:panel>
+        </b:panelGrid>
+
+    </b:form>
 </h:body>
 
 </html>

@@ -26,22 +26,29 @@ public class Pessoa implements Serializable {
     @NotNull(message = "O sobrenome deve ser informado")
     @Column(nullable = false)
     private String sobrenome;
-    @NotEmpty(message = "Preencha o campo idade")
+
+    @CPF
+    @NotNull(message = "o CPF deve ser informado")
+    private String cpf;
     @NotNull(message = "Preencha o campo idade")
     private int idade;
     @Temporal(TemporalType.DATE)
-    @Future(message = "A data de nascimento não pode ser maior que a data atual")
     private Date dataNascimento;
     @NotEmpty(message = "Preencha o campo sexo")
     @NotNull(message = "Preencha o campo sexo")
     private String sexo;
+    @NotEmpty(message = "Selecione uma opção")
+    @NotNull(message = "Selecione uma opção")
     private String[] frameworks;
     private Boolean ativo;
+    @NotEmpty(message = "Preencha o campo login")
+    @NotNull(message = "Preencha o campo login")
     private String login;
     private String senha;
     private String perfilUsuario;
     private String nivelProgramador;
     private String[] linguagens;
+
     private String cep;
     private String logradouro;
     private String complemento;
@@ -89,6 +96,14 @@ public class Pessoa implements Serializable {
 
     public void setSobrenome(String sobrenome) {
         this.sobrenome = sobrenome;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
     }
 
     public int getIdade() {
